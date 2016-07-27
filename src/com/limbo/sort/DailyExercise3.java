@@ -1,11 +1,15 @@
 package com.limbo.sort;
 
 /**
- * Created by Break.D on 7/22/16.
+ * Created by Break.D on 7/24/16.
  */
-public class DailyExercise2 {
+public class DailyExercise3 {
     public static void main(String[] args) {
+        test();
+    }
 
+
+    public static void test() {
         Integer[] x = new Integer[20000];
         for (int i = 0; i < 20000; i++) {
             int j = (int) (Math.random() * 20000);
@@ -13,7 +17,7 @@ public class DailyExercise2 {
             System.out.print(x[i] + " ");
         }
         long t1 = System.currentTimeMillis();
-        MergerSort2.sort(x);
+        HeapSort3.sort(x);
         long t2 = System.currentTimeMillis();
         long time = t2 - t1;
         System.out.println();
@@ -25,11 +29,12 @@ public class DailyExercise2 {
 
         System.out.println();
         System.out.println("排序所用时间: " + time + " millis");
+
     }
 }
 
-class SelectSort2 {
-    // 20000 个数排序,平均时间:1.9s
+
+class SelectSort3 {
     public static void sort(Comparable[] a) {
         for (int i = 0; i < a.length; i++) {
             int min = i;
@@ -41,23 +46,22 @@ class SelectSort2 {
     }
 }
 
-class BubbleSort2 {
-    // 平均时间:3s
+
+class BubbleSort3 {
     public static void sort(Comparable[] a) {
-        int n = a.length;
-        for (int i = n - 1; i >= 0; i--) {
-            for (int j = 0; j < i; j++) {
-                if (Util.less(a[j + 1], a[j])) Util.exch(a, j, j + 1);
+        for (int i = 0; i < a.length; i++) {
+            for (int j = 1; j < a.length - i; j++) {
+                if (Util.less(a[j], a[j - 1])) {
+                    Util.exch(a, j, j - 1);
+                }
             }
         }
     }
 }
 
-class InsertSort2 {
-    // 平均时间 1.6s
+class InserSort3 {
     public static void sort(Comparable[] a) {
-        int n = a.length;
-        for (int i = 1; i < n; i++) {
+        for (int i = 1; i < a.length; i++) {
             for (int j = i; j > 0 && Util.less(a[j], a[j - 1]); j--) {
                 Util.exch(a, j, j - 1);
             }
@@ -65,18 +69,16 @@ class InsertSort2 {
     }
 }
 
-class ShellSort2 {
-    // 平均用时: 0.08s——80 millis
+
+class ShellSort3 {
     public static void sort(Comparable[] a) {
         int n = a.length;
         int h = 1;
 
-        //找到最大步长
         while (h < n / 3) {
             h = 3 * h + 1;
         }
 
-        //缩减步长,迭代
         while (h >= 1) {
             for (int i = h; i < n; i++) {
                 for (int j = i; j >= h && Util.less(a[j], a[j - h]); j -= h) {
@@ -88,8 +90,7 @@ class ShellSort2 {
     }
 }
 
-class MergerSort2 {
-    // 平均用时: 0.04s——40 millis
+class MergeSort3 {
     private static Comparable[] aux;
 
     public static void sort(Comparable[] a) {
@@ -116,33 +117,31 @@ class MergerSort2 {
         for (int k = lo; k <= hi; k++) {
             if (i > mid) a[k] = aux[j++];
             else if (j > hi) a[k] = aux[i++];
-
-            /*
-            注意!是aux[i],不是a[i]
-             */
-            else if (Util.less(aux[i], aux[j])) a[k] = aux[i++];
-            else a[k] = a[j++];
+            else if (Util.less(aux[j], aux[i])) a[k] = aux[j++];
+            else a[k] = aux[i++];
         }
     }
+
 }
 
-class QuickSort2 {
-    //平均用时: 0.04s——40 millis
+class QuickSort3 {
+
     public static void sort(Comparable[] a) {
-        Util.shuffle(a);
-        sort(a, 0, a.length - 1);
+        int n = a.length;
+        sort(a, 0, n - 1);
     }
 
     private static void sort(Comparable[] a, int lo, int hi) {
         if (lo >= hi) return;
-        int j = partition(a, lo, hi);
-        sort(a, lo, j - 1);
-        sort(a, j + 1, hi);
+        int p = partition(a, lo, hi);
+        sort(a, lo, p - 1);
+        sort(a, p + 1, hi);
     }
 
     private static int partition(Comparable[] a, int lo, int hi) {
         int i = lo;
         int j = hi + 1;
+
         Comparable v = a[lo];
 
         while (true) {
@@ -151,19 +150,19 @@ class QuickSort2 {
             if (i >= j) break;
             Util.exch(a, i, j);
         }
-        Util.exch(a, j, lo);
+
+        Util.exch(a, lo, j);
         return j;
     }
 }
 
-class HeapSort<Key extends Comparable<Key>> {
-    //平均用时:0.08s
-    //使用数组实现二叉树结构的最大优先队列
+class HeapSort3<Key extends Comparable<Key>> {
     private Key[] keys;
     private int N = 0;
 
-    public HeapSort(int max) {
+    public HeapSort3(int max) {
         keys = (Key[]) new Comparable[max + 1];
+        N = max;
     }
 
     public boolean isEmpty() {
@@ -190,23 +189,27 @@ class HeapSort<Key extends Comparable<Key>> {
         while (2 * k <= n) {
             int j = 2 * k;
             if (j < n && Util.less(a[j], a[j + 1])) j++;
-            if (Util.less(a[j], a[k])) break;
+            if (Util.less(a[j],a[k])) break;
             Util.exch(a, j, k);
             k = j;
         }
+    }
+
+    public void sink(int k) {
+        sink(keys, k, N);
     }
 
     public Key delMax() {
         Key key = keys[1];
         Util.exch(keys, 1, N--);
         keys[N + 1] = null;
-        sink(keys, 1, N);
+        sink(1);
         return key;
     }
 
     public static void sort(Comparable[] a) {
-        //构造堆
         int n = a.length - 1;
+        //构造堆
         for (int i = n / 2; i > 0; i--) {
             sink(a, i, n);
         }
@@ -216,6 +219,11 @@ class HeapSort<Key extends Comparable<Key>> {
             Util.exch(a, 1, n--);
             sink(a, 1, n);
         }
-    }
 
+        // 如果 k = 0 会在sink()陷入死循环
+        /*while (n > 0) {
+            Util.exch(a, 0, n--);
+            sink(a, 0, n);
+        }*/
+    }
 }

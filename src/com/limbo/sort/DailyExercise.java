@@ -13,7 +13,7 @@ public class DailyExercise {
             System.out.print(x[i] + " ");
         }
 
-        QuickSortT.sort(x);
+        MergeSortT.sort(x);
         System.out.println();
 
         for (int i = 0; i < 20; i++) {
@@ -112,7 +112,7 @@ class MergeSortT {
         for (int k = lo; k <= hi; k++) {
             if (i > mid) a[k] = aux[j++];
             else if (j > hi) a[k] = aux[i++];
-            else if (Util.less(a[i], a[j])) a[k] = aux[i++];
+            else if (Util.less(aux[i], aux[j])) a[k] = aux[i++];
             else a[k] = aux[j++];
         }
     }
