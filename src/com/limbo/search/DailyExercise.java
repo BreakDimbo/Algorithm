@@ -6,14 +6,22 @@ package com.limbo.search;
 public class DailyExercise {
     public static void main(String[] args) {
 
-        SequentialSearch<Integer, String> ss = new SequentialSearch<>();
+        BinarySearchTree<Integer, String> ss = new BinarySearchTree<>();
 
         for (int i = 0; i < 30; i++) {
             int j = (int) (Math.random() * 30);
-            ss.put(1, "str" + j);
+            ss.put(j, "str" + j);
         }
-        System.out.println(ss.get(1));
-        System.out.println(ss.get(2));
+
+        for (int j = 0; j < 30; j++) {
+            System.out.print(ss.get(j) + " ");
+        }
+
+        System.out.println();
+        System.out.println(ss.min());
+        System.out.println(ss.floor(6));
+
+
     }
 }
 
@@ -103,11 +111,9 @@ class BinarySearchMap<Key extends Comparable<Key>, Value> {
         int mid = lo + (hi - lo) / 2;
         if (key.compareTo(keys[mid]) > 0) {
             return rank(key, mid + 1, hi);
-        }
-        else if (key.compareTo(keys[mid]) < 0) {
+        } else if (key.compareTo(keys[mid]) < 0) {
             return rank(key, lo, mid - 1);
-        }
-        else return mid;
+        } else return mid;
     }
 
 
@@ -147,5 +153,140 @@ class BinarySearchMap<Key extends Comparable<Key>, Value> {
         return lo;
     }
     */
+
+}
+
+
+class BinarySearchTree<Key extends Comparable<Key>, Value> {
+    private Node root;
+
+    private class Node {
+        Key key;
+        Value val;
+        Node left, right;
+        int N;
+
+        public Node(Key key, Value val, int n) {
+            this.key = key;
+            this.val = val;
+            N = n;
+        }
+    }
+
+    public int size() {
+        return size(root);
+    }
+
+    private int size(Node x) {
+        if (x == null) return 0;
+        else return x.N;
+    }
+
+    public Value get(Key key) {
+        return get(root, key);
+    }
+
+    private Value get(Node x, Key key) {
+        if (x == null) return null;
+        int cmp = key.compareTo(x.key);
+        if (cmp > 0) return get(x.right, key);
+        else if (cmp < 0) return get(x.left, key);
+        else return x.val;
+    }
+
+    public void put(Key key, Value value) {
+        root = put(root, key, value);
+    }
+
+    private Node put(Node x, Key key, Value value) {
+        if (x == null) return new Node(key, value, 1);
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) x.left = put(x.left, key, value);
+        else if (cmp > 0) x.right = put(x.right, key, value);
+        else x.val = value;
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    public Value min() {
+        return min(root).val;
+    }
+
+    private Node min(Node x) {
+        if (x.left == null) return x;
+        else return min(x.left);
+    }
+
+    public Value max() {
+        return max(root).val;
+    }
+
+    private Node max(Node x) {
+        if (x.right == null) return x;
+        else return max(x.right);
+    }
+
+    public Key floor(Key key) {
+        Node x = floor(root, key);
+        if (x == null) return null;
+        else return x.key;
+    }
+
+    private Node floor(Node x, Key key) {
+        if (x == null) return null;
+        int cmp = key.compareTo(x.key);
+        if (cmp == 0) return x;
+        if (cmp < 0) return floor(x.left, key);
+
+        Node t = floor(x.right, key);
+        if (t != null) return t;
+        return x;
+
+    }
+
+    public Key rank() {
+        return null;
+    }
+
+    public int select(Key key) {
+        return 0;
+    }
+
+    public void deleteMin() {
+        root = deleteMin(root);
+    }
+
+    private Node deleteMin(Node x) {
+        if (x.left == null) return x.right;
+        x.left = deleteMin(x.left);
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    public void delete(Key key) {
+        root = delete(key, root);
+    }
+
+    private Node delete(Key key, Node x) {
+        if (x == null) return null;
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) x.left = delete(key, x.left);
+        else if (cmp > 0) x.right = delete(key, x.right);
+        else {
+            if (x.left == null) return x.right;
+            if (x.right == null) return x.left;
+            Node t = x;
+            x = min(t.right);
+            x.right = deleteMin(t.right);
+            x.left = t.left;
+        }
+
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+
+    //范围查找
+
 
 }
