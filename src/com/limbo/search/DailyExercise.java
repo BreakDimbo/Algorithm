@@ -288,5 +288,8 @@ class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
     //范围查找
 
+}
+
+class RedBlackTree {
 
 }
