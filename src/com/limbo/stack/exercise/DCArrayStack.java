@@ -37,6 +37,10 @@ public class DCArrayStack<Item> implements Iterable<Item> {
     }
 
     public Item pop() {
+        if (isEmpty()) {
+            System.out.println("error!");
+            return null;
+        }
         Item item = items[--N];
         items[N] = null;
         if (N <= items.length / 4) resize(items.length / 2);

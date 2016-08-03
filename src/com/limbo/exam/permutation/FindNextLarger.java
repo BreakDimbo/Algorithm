@@ -1,13 +1,13 @@
-package com.limbo.exam;
-
+package com.limbo.exam.permutation;
 
 import java.util.Scanner;
 
 /**
  * Created by Break.D on 8/2/16.
  */
-public class FindNextLarger_resize {
+public class FindNextLarger {
 
+    private static int nums[];
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -20,9 +20,12 @@ public class FindNextLarger_resize {
 
     //findMethod
     private static void findNextLarger(char[] input) {
-        int[] nums = new int[1];
+        int capacity = computeFactorial(input.length);
+        int[] bucket = new int[capacity];
 
-        nums = Permutation_resize.permutation(input, true, nums);
+        Permutation.permutation(input, true, bucket);
+
+        nums = generateNums(bucket);
 
 
         quickSort(nums);
@@ -101,6 +104,27 @@ public class FindNextLarger_resize {
             result *= length;
         }
         return result;
+    }
+
+
+    //去掉 bucket里面的0元素
+    private static int[] generateNums(int[] bucket) {
+        int kindex = 0;
+        for (int i = 0; i < bucket.length; i++) {
+            if (bucket[i] != 0) {
+                kindex++;
+            }
+        }
+
+        nums = new int[kindex];
+        int k = 0;
+        for (int i = 0; i < bucket.length; i++) {
+            if (bucket[i] != 0) {
+                nums[k++] = bucket[i];
+            }
+        }
+
+        return nums;
     }
 
 }

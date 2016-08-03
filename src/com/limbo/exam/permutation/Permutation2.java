@@ -1,4 +1,4 @@
-package com.limbo.exam;
+package com.limbo.exam.permutation;
 
 import java.util.Scanner;
 
