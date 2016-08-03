@@ -290,6 +290,111 @@ class BinarySearchTree<Key extends Comparable<Key>, Value> {
 
 }
 
-class RedBlackTree {
+class RedBlackTree<Key extends Comparable<Key>, Value> {
+    private final static boolean RED = true;
+    private final static boolean BLACK = false;
+
+    private Node root;
+
+    private class Node {
+        Key key;
+        Value value;
+        Node left, right;
+        int N;
+        boolean color;
+
+        public Node(Key key, Value val, int N, boolean color) {
+            this.key = key;
+            this.value =val;
+            this.color =color;
+            this.N = N;
+        }
+    }
+
+    public int size() {
+        return size(root);
+    }
+
+    private int size(Node x) {
+        if (x == null) return 0;
+        return x.N;
+    }
+
+    public boolean isEmpty() {
+        return size() == 0;
+    }
+
+    public boolean isRed(Node x) {
+        if (x == null) return false;
+        return x.color == RED;
+    }
+
+    public Node leftRotate(Node h) {
+        Node x = h.right;
+        h.right = x.left;
+        x.left = h;
+        x.color = h.color;
+        h.color = RED;
+        x.N = h.N;
+        h.N = size(h.right) + size(h.left) + 1;
+        return x;
+    }
+
+    public Node rightRotate(Node h) {
+        Node x = h.left;
+        h.left = x.right;
+        x.right = h;
+        x.color = h.color;
+        h.color = RED;
+        x.N = h.N;
+        h.N = size(h.right) + size(h.left) + 1;
+        return x;
+    }
+
+    public void flipColor(Node x) {
+        x.left.color = BLACK;
+        x.right.color = BLACK;
+        x.color = RED;
+    }
+
+    public void put(Key key, Value value) {
+        root = put(key, value, root);
+        root.color = BLACK;
+    }
+
+    private Node put(Key key, Value value, Node x) {
+        if (x == null) return new Node(key, value, 1, RED);
+
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) x.left = put(key, value, x.left);
+        else if (cmp > 0) x.right = put(key, value, x.right);
+        else x.value = value;
+
+        if (!isRed(x.left) && isRed(x.right)) x = leftRotate(x);
+        if (isRed(x.left) && isRed(x.left.left)) x = rightRotate(x);
+        if (isRed(x.left) && isRed(x.left)) flipColor(x);
+
+        x.N = size(x.left) + size(x.right) + 1;
+        return x;
+    }
+
+    public Value get(Key key) {
+        return get(key, root);
+    }
+
+    private Value get(Key key, Node x) {
+        if (x == null) return null;
+        int cmp = key.compareTo(x.key);
+        if (cmp < 0) return get(key, x.left);
+        else if (cmp > 0) return get(key, x.right);
+        else return x.value;
+    }
+
+
+    // 实现 delete 方法
+    public void delete(Key key) {
+
+    }
+
 
 }

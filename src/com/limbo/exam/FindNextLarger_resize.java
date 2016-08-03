@@ -1,6 +1,5 @@
 package com.limbo.exam;
 
-import com.limbo.Exercise.test2.Permutation_resize;
 
 import java.util.Scanner;
 
